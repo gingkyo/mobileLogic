@@ -25,7 +25,6 @@ import android.view.DragEvent;
 import android.view.View;
 
 /**
- * This object is used in conjunction with a DragDropPresenter. 
  * It handles all drag events generated during a drag-drop operation.
  * When a drag starts, it creates a special view (a DragView) that moves around the screen
  * until the user ends the drag. As feedback to the user, this object causes the device to
@@ -37,7 +36,6 @@ import android.view.View;
 public class DragController 
     implements View.OnDragListener
 {
-    private DragDropPresenter mPresenter;
 
     private boolean mDragging;            // indicates that drag-drop is in progress
     private boolean mDropSuccess;         // indicates that the drop was successful
@@ -46,15 +44,9 @@ public class DragController
     private DropTarget mDropTarget;       // where the object was dropped
 
 
-/**
- * Return a new DragController that is set up to work with the object given.
- *
- * @param context The application's context.
- */
-public DragController (DragDropPresenter context) {
-    mPresenter = context;
-}
+public DragController(){
 
+}
 /**
  */
 // Methods
@@ -68,11 +60,6 @@ public DragController (DragDropPresenter context) {
  */
 
 @Override public boolean onDrag (View v, DragEvent event) {
-
-    // Check to see if the presenter object has drag-drop enabled.
-    if (mPresenter != null) {
-       if (!mPresenter.isDragDropEnabled ()) return false;
-    }
 
     // Determine if the view is a DragSource, DropTarget, or both.
     // That information is used below when the event is handled.
@@ -101,7 +88,6 @@ public DragController (DragDropPresenter context) {
         if (!mDragging) {
            mDragging = true;
            mDropSuccess = false;
-           if (mPresenter != null) mPresenter.onDragStarted (mDragSource);
            ImageCell ic = (ImageCell) mDragSource;
            Log.d (DragActivity.LOG_NAME, "Drag started. mDragSource drawable: " + ic.getDrawable ());
 
@@ -121,9 +107,9 @@ public DragController (DragDropPresenter context) {
            } else {
              eventResult = isDropTarget && target.allowDrop (mDragSource);
            }
-        } else if (isDropTarget) {
-           eventResult = target.allowDrop (mDragSource);
-        } else eventResult =  false;
+        } else {
+            eventResult = isDropTarget && target.allowDrop(mDragSource);
+        }
         break;
 
       case DragEvent.ACTION_DRAG_ENTERED:
@@ -146,18 +132,12 @@ public DragController (DragDropPresenter context) {
 
       case DragEvent.ACTION_DROP: 
         Log.d (DragActivity.LOG_NAME, "DragController.onDrag - dropped");
-        //   ImageCell ic2 = (ImageCell) mDragSource;
         //   Log.d (DragActivity.LOG_NAME, "Drag dropped. mDragSource drawable: " + ic2.getDrawable ());
         if (isDropTarget) {
            if (target.allowDrop (mDragSource)) {
               target.onDrop (mDragSource);
               mDropTarget = target;
               mDropSuccess = true;
-              /*
-              if (mDragSource != null) {
-                 mDragSource.onDropCompleted (mDropTarget, mDropSuccess);
-              }
-              */
            }
            eventResult = true;
         } else eventResult = false;
@@ -170,7 +150,6 @@ public DragController (DragDropPresenter context) {
            // (1) Inform the drag source that the drag is over; (2) Inform the presenter.
            Log.d (DragActivity.LOG_NAME, "DragController.onDrag DragSource: " + mDragSource);
            if (mDragSource != null) mDragSource.onDropCompleted (mDropTarget, mDropSuccess);
-           if (mPresenter != null) mPresenter.onDropCompleted (mDropTarget, mDropSuccess);
            eventResult =  true;
         }
         mDragging = false;

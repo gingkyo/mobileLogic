@@ -20,17 +20,15 @@ package com.wglxy.example.dragdrop;
  */
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 //import android.content.ClipData;
@@ -47,7 +45,7 @@ import android.widget.Toast;
  */
 
 public class DragActivity extends Activity 
-    implements View.OnLongClickListener, View.OnClickListener,
+    implements View.OnClickListener,
                View.OnTouchListener {
 
     public static final String LOG_NAME = "DragActivity";
@@ -58,17 +56,11 @@ public class DragActivity extends Activity
 
     private DragController mDragController;   // Object that handles a drag-drop sequence.
     // It interacts with DragSource and DropTarget objects.
-//private GridView mGridView;               // the GridView
-    private int mImageCount = 0;              // The number of images that have been added to screen.
     private ImageCell mLastNewCell = null;    // The last ImageCell added to the screen when Add Image is clicked.
-    private boolean mLongClickStartsDrag = false;   // If true, it takes a long click to start the drag operation.
-    // Otherwise, any touch event starts a drag.
-
-    private Vibrator mVibrator;
-    private static final int VIBRATE_DURATION = 35;
+    private ImageView powerButton_1,powerButton_2,powerButton_3;
+    private boolean addWireMode=false;
 
     public static final boolean Debugging = false;   // Use this to see extra toast messages while debugging.
-
 /**
  */
 // Methods
@@ -95,11 +87,10 @@ public class DragActivity extends Activity
             newView.mEmpty = false;
             newView.mCellNumber = -1;
             mLastNewCell = newView;
-            mImageCount++;
 
             // Have this activity listen to touch and click events for the view.
             newView.setOnClickListener(this);
-            newView.setOnLongClickListener(this);
+            //newView.setOnLongClickListener(this);
             newView.setOnTouchListener(this);
 
         }
@@ -139,29 +130,24 @@ public class DragActivity extends Activity
 //    addNewImageToScreen (resourceId);
     }
 
-    /**
-     * Handle a click on a view.
-     */
-
     public void onClick(View v) {
-        if (mLongClickStartsDrag) {
-            // Tell the user that it takes a long click to start dragging.
-            toast("Press and hold to drag an image.");
-        }
-    }//alters keypress
-
-    /**
-     * Handle a click of the Add Image button
-     */
-
-    public void onClickCircuitControl(View v) {
         switch (v.getId()) {
             case R.id.button_add_wire:
+                addWireMode=true;
                 break;
             case R.id.button_select_gate:
                 addNewImageToScreen(R.drawable.and_gate);
                 break;
             case R.id.button_undo_gate:
+                break;
+            case R.id.imageView_power_1 :
+                setPowerButton(powerButton_1);
+                break;
+            case R.id.imageView_power_2 :
+                setPowerButton(powerButton_2);
+                break;
+            case R.id.imageView_power_3 :
+                setPowerButton(powerButton_3);
                 break;
             default:
                 toast("Button Event Error");
@@ -180,7 +166,6 @@ public class DragActivity extends Activity
         setContentView(R.layout.circuit_screen);
 
         // When a drag starts, we vibrate so the user gets some feedback.
-        mVibrator = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
 
         // This activity will listen for drag-drop events.
         // The listener used is a DragController. Set it up.
@@ -188,76 +173,19 @@ public class DragActivity extends Activity
 
         // Set up the grid view with an ImageCellAdapter and have it use the DragController.
         GridView gridView = (GridView) findViewById(R.id.image_grid_view);
+        powerButton_1 =(ImageView)findViewById(R.id.imageView_power_1);
+        powerButton_1.setOnClickListener(this);
+        powerButton_2 =(ImageView)findViewById(R.id.imageView_power_2);
+        powerButton_2.setOnClickListener(this);
+        powerButton_3 =(ImageView)findViewById(R.id.imageView_power_3);
+        powerButton_3.setOnClickListener(this);
+
         if (gridView == null) toast("Unable to find GridView");
         else {
             gridView.setAdapter(new ImageCellAdapter(this, mDragController));
         }
 
     }
-
-    /**
-     * Handle a click of an item in the grid of cells.
-     */
-
-    public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-        ImageCell i = (ImageCell) v;
-        trace("onItemClick in view: " + i.mCellNumber);
-    }
-
-    /**
-     * Handle a long click.
-     * If mLongClickStartsDrag  only is true, this will be the only way to start a drag operation.
-     *
-     * @param v View
-     * @return boolean - true indicates that the event was handled
-     */
-
-    public boolean onLongClick(View v) {
-        if (mLongClickStartsDrag) {
-
-            //trace ("onLongClick in view: " + v + " touchMode: " + v.isInTouchMode ());
-
-            // Make sure the drag was started by a long press as opposed to a long click.
-            // (Note: I got this from the Workspace object in the Android Launcher code.
-            //  I think it is here to ensure that the device is still in touch mode as we start the drag operation.)
-            if (!v.isInTouchMode()) {
-                toast("isInTouchMode returned false. Try touching the view again.");
-                return false;
-            }
-            return startDrag(v);
-        }
-
-        // If we get here, return false to indicate that we have not taken care of the event.
-        return false;
-    }
-
-    /**
-     * Handle a long click.
-     * If mLongClick only is true, this will be the only way to start a drag operation.
-     *
-     * @param v View
-     * @return boolean - true indicates that the event was handled
-     */
-
-    public boolean onLongClickOLD(View v) {
-        if (mLongClickStartsDrag) {
-
-            //trace ("onLongClick in view: " + v + " touchMode: " + v.isInTouchMode ());
-
-            // Make sure the drag was started by a long press as opposed to a long click.
-            // (Note: I got this from the Workspace object in the Android Launcher code.
-            //  I think it is here to ensure that the device is still in touch mode as we start the drag operation.)
-            if (!v.isInTouchMode()) {
-                toast("isInTouchMode returned false. Try touching the view again.");
-                return false;
-            }
-            return startDrag(v);
-        }
-
-        // If we get here, return false to indicate that we have not taken care of the event.
-        return false;
-    }
-
     /**
      * This is the starting point for a drag operation if mLongClickStartsDrag is false.
      * It looks for the down event that gets generated when a user touches the screen.
@@ -266,8 +194,6 @@ public class DragActivity extends Activity
 
     public boolean onTouch(View v, MotionEvent ev) {
         // If we are configured to start only on a long click, we are not going to handle any events here.
-        if (mLongClickStartsDrag) return false;
-
         boolean handledHere = false;
 
         final int action = ev.getAction();
@@ -279,11 +205,22 @@ public class DragActivity extends Activity
 
         return handledHere;
     }
+    public void setPowerButton(ImageView powerButton){
+        String tag=powerButton.getTag().toString();
+        if(tag.equals("power_off")){
+          powerButton.setImageResource(R.drawable.power_on);
+          powerButton.setTag("power_on");
+        }
+        if(tag.equals("power_on")){
+            powerButton.setImageResource(R.drawable.power_off);
+            powerButton.setTag("power_off");
+        }
+        toast(tag);
+    }
 
     /**
      * Start dragging a view.
      */
-
     public boolean startDrag(View v) {
         // We are starting a drag-drop operation.
         // Set up the view and let our controller handle it.

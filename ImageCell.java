@@ -72,7 +72,7 @@ public ImageCell (Context context, AttributeSet attrs, int style) {
  */
 
 public boolean allowDrag () {
-    // There is something to drag if the cell is not empty.
+    //drag is limited to only the frame where the image is added and not within the grid
     return mCellNumber<0;
 }
 

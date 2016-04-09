@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CircuitTraining</string>
+
+    <integer name="num_images">32</integer>
+    <integer name="num_columns">8</integer>
+</resources>

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:gravity="center"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/circuitTopPanel">
+
+        <Button
+            android:id="@+id/button_add_wire"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:onClick="onClick"
+            android:text="Add Wire"/>
+        <Button
+            android:id="@+id/button_select_gate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:onClick="onClick"
+            android:text="Select Gate"/>
+        <FrameLayout
+            android:id="@+id/image_source_frame"
+            android:layout_width="@dimen/add_image_width"
+            android:layout_height="@dimen/add_image_height"
+            android:layout_weight="2">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:id="@+id/newGateFrame"
+                />
+
+        </FrameLayout>
+        <Button
+            android:id="@+id/button_undo_gate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:onClick="onClickCircuitControl"
+            android:text="Undo Last"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="75dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/circuitTopPanel"
+        android:layout_above="@+id/circuitInfoPanel"
+        android:id="@+id/circuitSwitchPanel"
+
+        >
+
+        <ImageView
+            android:layout_width="@dimen/add_image_width"
+            android:layout_height="@dimen/add_image_height"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:id="@+id/imageView_power_1"
+            android:src="@drawable/power_off"
+            android:tag="power_off"/>
+
+        <ImageView
+            android:layout_width="@dimen/add_image_width"
+            android:layout_height="@dimen/add_image_height"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:layout_below="@+id/imageView_power_1"
+            android:id="@+id/imageView_power_2"
+            android:src="@drawable/power_off"
+            android:tag="power_off"/>
+
+        <ImageView
+            android:layout_width="@dimen/add_image_width"
+            android:layout_height="@dimen/add_image_height"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:layout_below="@+id/imageView_power_2"
+            android:id="@+id/imageView_power_3"
+            android:src="@drawable/power_off"
+            android:tag="power_off"/>
+    </LinearLayout>
+
+ <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/circuitMainPanel"
+        android:layout_toRightOf="@+id/circuitSwitchPanel"
+        android:layout_toLeftOf="@+id/circuitBulbPanel"
+        android:layout_below="@+id/circuitTopPanel"
+        android:layout_above="@+id/circuitInfoPanel"
+
+        >
+        <GridView
+            android:id="@+id/image_grid_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:numColumns="@integer/num_columns"
+            android:verticalSpacing="@dimen/grid_cell_spacing"
+            android:horizontalSpacing="@dimen/grid_cell_spacing"
+            android:stretchMode="columnWidth"
+            android:gravity="center"
+            android:background="@color/grid_background"
+            />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="75dp"
+        android:layout_height="match_parent"
+        android:id="@+id/circuitBulbPanel"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/circuitTopPanel"
+        android:layout_above="@id/circuitInfoPanel"
+        >
+
+
+        <ImageView
+            android:layout_width="@dimen/add_image_width"
+            android:layout_height="@dimen/add_image_height"
+            android:layout_weight="1"
+            android:id="@+id/imageView_bulb_0"
+            android:src="@drawable/bulb_off"/>
+
+        <ImageView
+            android:layout_width="@dimen/add_image_width"
+            android:layout_height="@dimen/add_image_height"
+            android:layout_weight="1"
+            android:layout_below="@+id/imageView_bulb_0"
+            android:id="@+id/imageView_bulb_1"
+            android:src="@drawable/bulb_off"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/circuitInfoPanel"
+        >
+
+    </LinearLayout>
+
+</RelativeLayout>
